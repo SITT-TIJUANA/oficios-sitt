@@ -6,21 +6,19 @@
 <title>Dirección de Operaciones — SITT Tijuana</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
 <!-- ══════════════ LOGIN ══════════════ -->
 <div id="login-screen">
-  <div class="login-particles" id="particles"></div>
-  <div class="login-overlay"></div>
+  <canvas id="bg-canvas"></canvas>
+  <div class="login-noise"></div>
 
   <header class="login-topbar">
     <div class="login-topbar-left">
-      <div class="login-escudo">
-        <svg width="44" height="44" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="14" text-anchor="middle" font-size="7" font-weight="800" fill="#4A0F1C">H. XXV</text><text x="22" y="23" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C">AYTO.</text><text x="22" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C">TIJUANA</text><text x="22" y="40" text-anchor="middle" font-size="5" fill="#4A0F1C">2024–2027</text></svg>
-      </div>
+      <svg width="42" height="42" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="13" text-anchor="middle" font-size="6.5" font-weight="800" fill="#4A0F1C" font-family="Inter">H. XXV</text><text x="22" y="22" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C" font-family="Inter">AYTO.</text><text x="22" y="30" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C" font-family="Inter">TIJUANA</text><text x="22" y="38" text-anchor="middle" font-size="4.8" fill="#4A0F1C" font-family="Inter">2024–2027</text></svg>
       <div class="login-brand-info">
         <span class="login-brand-top">H. XXV Ayuntamiento de Tijuana · 2024–2027</span>
         <span class="login-brand-sub">Sistema de Transporte Masivo Urbano de Pasajeros · SITT</span>
@@ -30,17 +28,24 @@
 
   <div class="login-body">
     <div class="login-left">
-      <div class="login-dept-badge"><i class="ti ti-building"></i> DIRECCIÓN DE OPERACIONES</div>
-      <h1 class="login-main-title">Sistema de<br>Control de<br><span class="login-gold">Oficios</span></h1>
-      <p class="login-desc">Plataforma institucional para el registro, seguimiento y control de oficios, instrucciones y documentación operativa del SITT Tijuana.</p>
-      <div class="login-features">
+      <div class="login-dept-badge" id="dept-badge">
+        <span class="badge-dot"></span>
+        <span>DIRECCIÓN DE OPERACIONES</span>
+      </div>
+      <h1 class="login-main-title">
+        <span class="title-line" id="t1">CONTROL</span>
+        <span class="title-line gold" id="t2">DE OFICIOS</span>
+        <span class="title-line thin" id="t3">Y PENDIENTES</span>
+      </h1>
+      <p class="login-desc" id="login-desc-txt">Plataforma institucional para el registro, seguimiento y control de oficios, instrucciones y documentación operativa del SITT Tijuana.</p>
+      <div class="login-features" id="login-feats">
         <div class="lf-item"><i class="ti ti-git-branch"></i><span>Flujo visual por etapas</span></div>
         <div class="lf-item"><i class="ti ti-file-report"></i><span>Generación de reportes PDF y Word</span></div>
-        <div class="lf-item"><i class="ti ti-bell"></i><span>Seguimiento en tiempo real</span></div>
+        <div class="lf-item"><i class="ti ti-bell"></i><span>Alertas y seguimiento en tiempo real</span></div>
         <div class="lf-item"><i class="ti ti-shield-lock"></i><span>Roles y permisos institucionales</span></div>
       </div>
     </div>
-    <div class="login-right">
+    <div class="login-right" id="login-right">
       <div class="login-card">
         <div class="login-card-icon"><i class="ti ti-files"></i></div>
         <h2>Acceso al sistema</h2>
@@ -53,23 +58,27 @@
       </div>
     </div>
   </div>
+
+  <div class="login-footer-bar">
+    <span>H. XXV Ayuntamiento de Tijuana · Dirección de Operaciones · SITT 2024–2027</span>
+    <span style="opacity:0.4">Control, seguimiento y eficiencia documental</span>
+  </div>
 </div>
 
-<!-- ══════════════ HOME MENU ══════════════ -->
+<!-- ══════════════ HOME ══════════════ -->
 <div id="home-screen" style="display:none">
-  <div class="home-bg"></div>
-  <div class="home-overlay"></div>
+  <canvas id="home-canvas"></canvas>
+  <div class="home-noise"></div>
   <header class="home-header">
     <div class="home-header-left">
-      <div class="login-escudo">
-        <svg width="40" height="40" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="14" text-anchor="middle" font-size="7" font-weight="800" fill="#4A0F1C">H. XXV</text><text x="22" y="23" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C">AYTO.</text><text x="22" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C">TIJUANA</text><text x="22" y="40" text-anchor="middle" font-size="5" fill="#4A0F1C">2024–2027</text></svg>
-      </div>
+      <svg width="38" height="38" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="13" text-anchor="middle" font-size="6.5" font-weight="800" fill="#4A0F1C" font-family="Inter">H. XXV</text><text x="22" y="22" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C" font-family="Inter">AYTO.</text><text x="22" y="30" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C" font-family="Inter">TIJUANA</text><text x="22" y="38" text-anchor="middle" font-size="4.8" fill="#4A0F1C" font-family="Inter">2024–2027</text></svg>
       <div>
         <div class="home-header-title">Dirección de Operaciones · SITT</div>
-        <div class="home-header-sub">Sistema de Control de Oficios</div>
+        <div class="home-header-sub">Sistema de Control de Oficios y Pendientes</div>
       </div>
     </div>
     <div class="home-header-right">
+      <div class="home-time" id="home-time"></div>
       <span class="home-user-chip"><i class="ti ti-user-circle"></i> <span id="home-user-name"></span></span>
       <button class="home-exit-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
     </div>
@@ -77,47 +86,53 @@
 
   <div class="home-body">
     <div class="home-welcome">
-      <div class="home-welcome-text">Bienvenido, <span id="home-welcome-name"></span></div>
+      <div class="home-welcome-greeting" id="home-greeting">Buen día</div>
+      <div class="home-welcome-name" id="home-welcome-name"></div>
       <div class="home-welcome-sub">Selecciona una sección para continuar</div>
     </div>
 
-    <div class="home-grid">
-      <div class="home-card" onclick="enterApp('oficios')">
-        <div class="home-card-icon" style="background:linear-gradient(135deg,#6B1A2A,#A32D4A)">
+    <div class="home-grid" id="home-grid">
+      <div class="home-card" onclick="enterApp('oficios')" style="--delay:0s">
+        <div class="home-card-glow" style="background:radial-gradient(circle at 30% 30%,rgba(107,26,42,0.6),transparent 70%)"></div>
+        <div class="home-card-icon-wrap" style="background:linear-gradient(135deg,#6B1A2A,#A32D4A)">
           <i class="ti ti-files"></i>
         </div>
-        <div class="home-card-content">
+        <div class="home-card-body">
           <h3>Oficios</h3>
-          <p>Registro, seguimiento y control de oficios. Flujo visual por etapas, historial y reportes.</p>
-          <div class="home-card-tags">
-            <span>Flujo visual</span><span>Reportes PDF</span><span>Historial</span>
+          <p>Registro, seguimiento y control de oficios institucionales con flujo visual por etapas.</p>
+          <div class="home-card-pills">
+            <span>Flujo visual</span><span>Reportes</span><span>Alertas</span>
           </div>
         </div>
         <div class="home-card-arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="home-card-num" id="hc-oficios">—</div>
       </div>
 
-      <div class="home-card" onclick="enterApp('pendientes')">
-        <div class="home-card-icon" style="background:linear-gradient(135deg,#854F0B,#C9A227)">
+      <div class="home-card" onclick="enterApp('pendientes')" style="--delay:0.1s">
+        <div class="home-card-glow" style="background:radial-gradient(circle at 30% 30%,rgba(133,79,11,0.6),transparent 70%)"></div>
+        <div class="home-card-icon-wrap" style="background:linear-gradient(135deg,#854F0B,#C9A227)">
           <i class="ti ti-clock"></i>
         </div>
-        <div class="home-card-content">
+        <div class="home-card-body">
           <h3>Pendientes</h3>
-          <p>Oficios e instrucciones pendientes de atención. Alertas de vencimiento y prioridades.</p>
-          <div class="home-card-tags">
-            <span>Sin respuesta</span><span>Urgentes</span><span>Seguimiento</span>
+          <p>Instrucciones y asuntos internos pendientes de atención. Generación de oficio directo.</p>
+          <div class="home-card-pills">
+            <span>Instrucciones</span><span>Sin oficio</span><span>Urgentes</span>
           </div>
         </div>
         <div class="home-card-arrow"><i class="ti ti-arrow-right"></i></div>
+        <div class="home-card-num" id="hc-pendientes">—</div>
       </div>
 
-      <div class="home-card" onclick="enterApp('otros')">
-        <div class="home-card-icon" style="background:linear-gradient(135deg,#185FA5,#4A90D9)">
+      <div class="home-card" onclick="enterApp('otros')" style="--delay:0.2s">
+        <div class="home-card-glow" style="background:radial-gradient(circle at 30% 30%,rgba(24,95,165,0.6),transparent 70%)"></div>
+        <div class="home-card-icon-wrap" style="background:linear-gradient(135deg,#185FA5,#4A90D9)">
           <i class="ti ti-layout-grid"></i>
         </div>
-        <div class="home-card-content">
+        <div class="home-card-body">
           <h3>Otros</h3>
-          <p>Comunicados internos, archivo general, estadísticas y documentación complementaria.</p>
-          <div class="home-card-tags">
+          <p>Comunicados internos, estadísticas generales, archivo y documentación complementaria.</p>
+          <div class="home-card-pills">
             <span>Comunicados</span><span>Estadísticas</span><span>Archivo</span>
           </div>
         </div>
@@ -127,8 +142,9 @@
 
     <div class="home-bottom" id="home-ajustes" style="display:none">
       <button class="home-ajustes-btn" onclick="enterApp('ajustes')">
-        <i class="ti ti-settings"></i> Ajustes del sistema
-        <span style="font-size:11px;opacity:0.7;margin-left:8px">Usuarios · Historial · Perfil</span>
+        <i class="ti ti-settings"></i>
+        <span>Ajustes del sistema</span>
+        <span class="ajustes-sub">Usuarios · Historial · Mi perfil</span>
       </button>
     </div>
   </div>
@@ -138,36 +154,29 @@
 <div id="app" style="display:none">
   <header class="topbar">
     <div class="topbar-left">
-      <button class="btn-back" onclick="goHome()" title="Volver al menú"><i class="ti ti-arrow-left"></i></button>
+      <button class="btn-back" onclick="goHome()" title="Menú principal"><i class="ti ti-arrow-left"></i></button>
       <i class="ti ti-files topbar-logo"></i>
-      <span class="topbar-title" id="app-section-title">Oficios — SITT</span>
+      <span class="topbar-title" id="app-section-title">SITT — Dirección de Operaciones</span>
     </div>
     <div class="topbar-right">
       <span class="user-chip" id="user-name"></span>
       <button class="btn-ghost-top" onclick="doLogout()" title="Salir"><i class="ti ti-logout"></i></button>
     </div>
   </header>
-
   <div class="layout">
-    <nav class="sidenav" id="sidenav">
-      <!-- Se llena dinámicamente según la sección -->
-    </nav>
-    <main class="main-content" id="main-content">
-      <!-- Se llena dinámicamente -->
-    </main>
+    <nav class="sidenav" id="sidenav"></nav>
+    <main class="main-content" id="main-content"></main>
   </div>
 </div>
 
-<!-- ══════════════ MODALES ══════════════ -->
+<!-- MODALES -->
 <div class="modal-overlay" id="oficio-modal" style="display:none">
   <div class="modal">
     <div class="modal-header"><h3 id="oficio-modal-title">Nuevo Oficio</h3><button onclick="closeModal('oficio-modal')"><i class="ti ti-x"></i></button></div>
     <input type="hidden" id="oficio-id">
     <div class="form-row">
-      <div class="form-group"><label>Número de oficio *</label><input type="text" id="of-numero" placeholder="Ej: OF-2026-001"></div>
-      <div class="form-group"><label>Prioridad</label>
-        <select id="of-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baja">Baja</option></select>
-      </div>
+      <div class="form-group"><label>Número de oficio *</label><input type="text" id="of-numero" placeholder="Ej: OF DIR 011"></div>
+      <div class="form-group"><label>Prioridad</label><select id="of-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baja">Baja</option></select></div>
     </div>
     <div class="form-group"><label>Tema / Asunto *</label><input type="text" id="of-tema" placeholder="Descripción breve del tema"></div>
     <div class="form-group"><label>Descripción</label><textarea id="of-descripcion" rows="3" placeholder="Descripción detallada..."></textarea></div>
@@ -183,11 +192,7 @@
       <div class="form-group"><label>Fecha de respuesta</label><input type="date" id="of-fecha-respuesta"></div>
       <div class="form-group"><label>Fecha de terminación</label><input type="date" id="of-fecha-terminacion"></div>
     </div>
-    <div class="form-group">
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
-        <input type="checkbox" id="of-requiere-resp" style="width:auto"> Requiere respuesta
-      </label>
-    </div>
+    <div class="form-group"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="of-requiere-resp" style="width:auto"> Requiere respuesta</label></div>
     <div class="form-group"><label>Observaciones</label><textarea id="of-observaciones" rows="2" placeholder="Notas adicionales..."></textarea></div>
     <div class="modal-footer">
       <button class="btn-outline" onclick="closeModal('oficio-modal')">Cancelar</button>
@@ -198,18 +203,18 @@
 
 <div class="modal-overlay" id="etapa-modal" style="display:none">
   <div class="modal" style="max-width:440px">
-    <div class="modal-header"><h3>Mover a siguiente etapa</h3><button onclick="closeModal('etapa-modal')"><i class="ti ti-x"></i></button></div>
+    <div class="modal-header"><h3>Mover etapa</h3><button onclick="closeModal('etapa-modal')"><i class="ti ti-x"></i></button></div>
     <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Oficio: <strong id="etapa-oficio-num"></strong></p>
     <div class="form-group"><label>Nueva etapa</label>
       <select id="etapa-nueva">
         <option value="recibido">📥 Recibido</option>
-        <option value="en_proceso">⚙️ En proceso de elaboración</option>
+        <option value="en_proceso">⚙️ En proceso</option>
         <option value="firmado">✍️ Firmado / Despachado</option>
         <option value="requiere_respuesta">❓ Requiere respuesta</option>
         <option value="sin_respuesta">⚠️ Sin respuesta</option>
         <option value="reiterar">🔁 Reiterar petición</option>
-        <option value="respondido">✅ Oficio respondido</option>
-        <option value="terminado">🏁 Se termina asunto</option>
+        <option value="respondido">✅ Respondido</option>
+        <option value="terminado">🏁 Terminado</option>
         <option value="archivado">📁 Archivado</option>
       </select>
     </div>
@@ -224,32 +229,11 @@
 
 <div class="modal-overlay" id="instr-modal" style="display:none">
   <div class="modal">
-    <div class="modal-header"><h3 id="instr-modal-title">Nueva Instrucción</h3><button onclick="closeModal('instr-modal')"><i class="ti ti-x"></i></button></div>
+    <div class="modal-header"><h3 id="instr-modal-title">Nuevo Pendiente</h3><button onclick="closeModal('instr-modal')"><i class="ti ti-x"></i></button></div>
     <input type="hidden" id="instr-id">
     <div class="form-row">
-      <div class="form-group"><label>Folio *</label><input type="text" id="instr-folio" placeholder="Ej: INST-001"></div>
-      <div class="form-group"><label>Prioridad</label>
-        <select id="instr-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baja">Baja</option></select>
-      </div>
+      <div class="form-group"><label>Folio *</label><input type="text" id="instr-folio" placeholder="Ej: PEND-001"></div>
+      <div class="form-group"><label>Prioridad</label><select id="instr-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baja">Baja</option></select></div>
     </div>
-    <div class="form-group"><label>Instrucción *</label><textarea id="instr-texto" rows="4" placeholder="Descripción de la instrucción..."></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>Fecha</label><input type="date" id="instr-fecha"></div>
-      <div class="form-group"><label>Asignado a</label><select id="instr-asignado"><option value="">Sin asignar</option></select></div>
-    </div>
-    <div class="form-group"><label>Estado</label>
-      <select id="instr-estado"><option value="pendiente">Pendiente</option><option value="en_proceso">En proceso</option><option value="completada">Completada</option></select>
-    </div>
-    <div class="form-group"><label>Observaciones</label><textarea id="instr-obs" rows="2" placeholder="Notas..."></textarea></div>
-    <div class="modal-footer">
-      <button class="btn-outline" onclick="closeModal('instr-modal')">Cancelar</button>
-      <button class="btn-primary" onclick="guardarInstruccion()">Guardar</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast" style="display:none" class="toast"></div>
-<script src="js/flujo-visual.js"></script>
-<script src="js/app.js"></script>
-</body>
-</html>
+    <div class="form-group"><label>Descripción *</label><textarea id="instr-texto" rows="4" placeholder="Descripción del pendiente..."></textarea></div>
+    <div class="f
