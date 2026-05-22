@@ -24,6 +24,24 @@ function _mostrarLoginInternal() {
   }, 600);
 }
 
+function irALogin() {
+  const splash = document.getElementById('splash-screen');
+  const login  = document.getElementById('login-screen');
+  const card   = login ? login.querySelector('.login-card') : null;
+  if (splash) { splash.style.transition = 'opacity 0.55s ease'; splash.style.opacity = '0'; }
+  setTimeout(() => {
+    if (splash) splash.style.display = 'none';
+    if (login)  login.style.display  = 'flex';
+    startCanvas('bg-canvas');
+    if (card) {
+      card.style.opacity   = '0';
+      card.style.transform = 'translateY(36px) scale(0.96)';
+      card.style.transition = 'all 0.5s cubic-bezier(.22,1,.36,1)';
+      setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0) scale(1)'; }, 60);
+    }
+  }, 560);
+}
+
 function regresarSplash() {
   const splash = document.getElementById('splash-screen');
   const login = document.getElementById('login-screen');
