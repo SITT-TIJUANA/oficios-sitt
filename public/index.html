@@ -11,9 +11,61 @@
 </head>
 <body>
 
-<!-- ── LOGIN ── -->
-<div id="login-screen">
+<!-- ══ SPLASH / PORTADA ══ -->
+<div id="splash-screen">
+  <canvas id="splash-canvas"></canvas>
+  <div class="splash-bg-img"></div>
+  <div class="splash-overlay"></div>
+
+  <div class="splash-top">
+    <div class="splash-escudo">
+      <svg width="44" height="44" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="13" text-anchor="middle" font-size="6.5" font-weight="800" fill="#4A0F1C" font-family="Inter,sans-serif">H. XXV</text><text x="22" y="22" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C" font-family="Inter,sans-serif">AYTO.</text><text x="22" y="30" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C" font-family="Inter,sans-serif">TIJUANA</text><text x="22" y="38" text-anchor="middle" font-size="4.8" fill="#4A0F1C" font-family="Inter,sans-serif">2024–2027</text></svg>
+    </div>
+    <div class="splash-top-text">H. XXV Ayuntamiento de Tijuana &nbsp;·&nbsp; SITT</div>
+  </div>
+
+  <div class="splash-center">
+    <div class="splash-badge" id="splash-badge">
+      <span class="sbdot"></span>
+      DIRECCIÓN DE OPERACIONES
+    </div>
+    <h1 class="splash-title">
+      <span id="sp1">CONTROL DE</span>
+      <span id="sp2" class="gold-txt">OFICIOS</span>
+      <span id="sp3">Y PENDIENTES</span>
+    </h1>
+    <p class="splash-sub" id="splash-sub">
+      Plataforma institucional de gestión documental · SITT Tijuana
+    </p>
+    <div class="splash-btn-wrap" id="splash-btn-wrap">
+      <button class="splash-btn" id="splash-btn" onclick="mostrarLogin()">
+        <span class="splash-btn-ring"></span>
+        <span class="splash-btn-inner">
+          <i class="ti ti-login"></i>
+          <span>INGRESAR AL SISTEMA</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="splash-bottom">
+    <div class="splash-stats">
+      <div class="sstat"><i class="ti ti-git-branch"></i><span>Flujo visual</span></div>
+      <div class="sdiv"></div>
+      <div class="sstat"><i class="ti ti-file-report"></i><span>Reportes PDF</span></div>
+      <div class="sdiv"></div>
+      <div class="sstat"><i class="ti ti-bell"></i><span>Alertas</span></div>
+      <div class="sdiv"></div>
+      <div class="sstat"><i class="ti ti-shield-lock"></i><span>Roles y accesos</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen" style="display:none">
   <canvas id="bg-canvas"></canvas>
+  <div class="login-overlay"></div>
+
   <header class="login-topbar">
     <div class="login-topbar-inner">
       <svg width="40" height="40" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="13" text-anchor="middle" font-size="6.5" font-weight="800" fill="#4A0F1C" font-family="Inter,sans-serif">H. XXV</text><text x="22" y="22" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C" font-family="Inter,sans-serif">AYTO.</text><text x="22" y="30" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C" font-family="Inter,sans-serif">TIJUANA</text><text x="22" y="38" text-anchor="middle" font-size="4.8" fill="#4A0F1C" font-family="Inter,sans-serif">2024–2027</text></svg>
@@ -22,10 +74,14 @@
         <div class="topbar-sub">Sistema de Transporte Masivo Urbano de Pasajeros · SITT</div>
       </div>
     </div>
+    <button class="back-to-splash" onclick="regresarSplash()">
+      <i class="ti ti-arrow-left"></i> Volver
+    </button>
   </header>
+
   <div class="login-body">
     <div class="login-left">
-      <div class="login-badge"><span class="badge-dot"></span>SITT · Dirección de Operaciones</div>
+      <div class="login-badge"><span class="badge-dot"></span>DIRECCIÓN DE OPERACIONES</div>
       <div class="login-title">
         <span class="lt-main" id="lt1">DIRECCIÓN DE</span>
         <span class="lt-main" id="lt2">OPERACIONES</span>
@@ -39,7 +95,7 @@
         <div class="lf-item"><i class="ti ti-shield-lock"></i><span>Roles y permisos institucionales</span></div>
       </div>
     </div>
-    <div class="login-right">
+    <div class="login-right" id="login-card-wrap">
       <div class="login-card">
         <div class="login-card-icon"><i class="ti ti-files"></i></div>
         <h2>Acceso al sistema</h2>
@@ -54,7 +110,7 @@
   </div>
 </div>
 
-<!-- ── HOME ── -->
+<!-- ══ HOME ══ -->
 <div id="home-screen" style="display:none">
   <canvas id="home-canvas"></canvas>
   <header class="home-header">
@@ -118,7 +174,7 @@
   </div>
 </div>
 
-<!-- ── APP ── -->
+<!-- ══ APP ══ -->
 <div id="app" style="display:none">
   <header class="app-topbar">
     <div style="display:flex;align-items:center;gap:10px">
@@ -137,7 +193,7 @@
   </div>
 </div>
 
-<!-- ── MODAL OFICIO ── -->
+<!-- ══ MODALES ══ -->
 <div class="modal-overlay" id="modal-oficio" style="display:none">
   <div class="modal">
     <div class="modal-header"><h3 id="modal-oficio-title">Nuevo Oficio</h3><button onclick="closeModal('modal-oficio')"><i class="ti ti-x"></i></button></div>
@@ -154,31 +210,25 @@
   </div>
 </div>
 
-<!-- ── MODAL ETAPA ── -->
 <div class="modal-overlay" id="modal-etapa" style="display:none">
   <div class="modal" style="max-width:440px">
     <div class="modal-header"><h3>Mover etapa</h3><button onclick="closeModal('modal-etapa')"><i class="ti ti-x"></i></button></div>
     <p style="font-size:13px;color:#6B7280;margin-bottom:14px">Oficio: <strong id="etapa-num-txt"></strong></p>
     <div class="form-group"><label>Nueva etapa</label>
       <select id="etapa-select">
-        <option value="recibido">📥 Recibido</option>
-        <option value="en_proceso">⚙️ En proceso</option>
-        <option value="firmado">✍️ Firmado</option>
-        <option value="requiere_respuesta">❓ Requiere respuesta</option>
-        <option value="sin_respuesta">⚠️ Sin respuesta</option>
-        <option value="reiterar">🔁 Reiterar</option>
-        <option value="respondido">✅ Respondido</option>
-        <option value="terminado">🏁 Terminado</option>
+        <option value="recibido">📥 Recibido</option><option value="en_proceso">⚙️ En proceso</option>
+        <option value="firmado">✍️ Firmado</option><option value="requiere_respuesta">❓ Requiere respuesta</option>
+        <option value="sin_respuesta">⚠️ Sin respuesta</option><option value="reiterar">🔁 Reiterar</option>
+        <option value="respondido">✅ Respondido</option><option value="terminado">🏁 Terminado</option>
         <option value="archivado">📁 Archivado</option>
       </select>
     </div>
-    <div class="form-group"><label>Comentario</label><textarea id="etapa-comentario" rows="3" placeholder="Comentario del movimiento..."></textarea></div>
+    <div class="form-group"><label>Comentario</label><textarea id="etapa-comentario" rows="3" placeholder="Comentario..."></textarea></div>
     <input type="hidden" id="etapa-oficio-id">
     <div class="modal-footer"><button class="btn-outline" onclick="closeModal('modal-etapa')">Cancelar</button><button class="btn-primary" onclick="guardarEtapa()"><i class="ti ti-check"></i> Confirmar</button></div>
   </div>
 </div>
 
-<!-- ── MODAL PENDIENTE ── -->
 <div class="modal-overlay" id="modal-pend" style="display:none">
   <div class="modal">
     <div class="modal-header"><h3 id="modal-pend-title">Nuevo Pendiente</h3><button onclick="closeModal('modal-pend')"><i class="ti ti-x"></i></button></div>
