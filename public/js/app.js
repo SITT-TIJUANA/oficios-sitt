@@ -1,3 +1,29 @@
+// ══ SIDENAV TOGGLE ══
+function toggleNav() {
+  const nav = document.getElementById('sidenav');
+  const overlay = document.getElementById('sidenav-overlay');
+  const btn = document.getElementById('nav-toggle');
+  const isOpen = nav.classList.contains('open');
+  if (isOpen) {
+    nav.classList.remove('open');
+    overlay.classList.remove('visible');
+    if (btn) btn.innerHTML = '<i class="ti ti-menu-2"></i>';
+  } else {
+    nav.classList.add('open');
+    overlay.classList.add('visible');
+    if (btn) btn.innerHTML = '<i class="ti ti-x"></i>';
+  }
+}
+
+function closeNav() {
+  const nav = document.getElementById('sidenav');
+  const overlay = document.getElementById('sidenav-overlay');
+  const btn = document.getElementById('nav-toggle');
+  nav.classList.remove('open');
+  overlay.classList.remove('visible');
+  if (btn) btn.innerHTML = '<i class="ti ti-menu-2"></i>';
+}
+
 // ══ SPLASH ══
 function _mostrarLoginInternal() {
   const splash = document.getElementById('splash-screen');
@@ -307,6 +333,9 @@ function activarSeccion(id) {
     sec.classList.add('active');
     cargarSeccion(id, sec);
   }
+
+  // En móvil cerrar el nav al seleccionar
+  if (window.innerWidth <= 768) closeNav();
 }
 
 // ══ CARGAR SECCIÓN ══
