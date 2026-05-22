@@ -96,7 +96,7 @@ function goSection(sec, el) {
     oficios: () => loadOficiosSec('todos'),
     pendientes: () => loadOficiosSec('pendientes'),
     realizados: () => loadOficiosSec('realizados'),
-    flujo: () => searchFlujo(),
+    flujo: () => { loadFlujoReal(); searchFlujo(); },
     instrucciones: loadInstrucciones,
     reportes: loadReportes,
     plantillas: loadPlantillas,
@@ -261,6 +261,13 @@ async function guardarEtapa() {
     if (currentSection === 'flujo' && flujoOficioActual) loadFlujoDetalle(flujoOficioActual);
     loadOficiosSec(currentSection === 'pendientes' ? 'pendientes' : 'todos');
   } else toast('Error', 'error');
+}
+
+async function loadFlujoReal() {
+  const data = await api('GET', '/oficios');
+  if (!data) return;
+  initFlujoVisual(data);
+  startFlujoAnimation(() => data);
 }
 
 async function searchFlujo() {
