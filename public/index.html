@@ -149,7 +149,9 @@
   <header class="app-topbar">
     <div style="display:flex;align-items:center;gap:10px">
       <button class="back-btn" onclick="goHome()"><i class="ti ti-arrow-left"></i></button>
-      <button class="sidenav-toggle" onclick="toggleNav()" id="nav-toggle" title="Menú"><i class="ti ti-menu-2"></i></button>
+      <button class="hamburger" id="hamburger" onclick="toggleNav()">
+        <span></span><span></span><span></span>
+      </button>
       <i class="ti ti-files" style="font-size:20px;color:#C9A227"></i>
       <span id="app-title" style="font-size:14px;font-weight:700;color:#fff;letter-spacing:.3px"></span>
     </div>
