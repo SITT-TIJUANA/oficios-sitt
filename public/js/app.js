@@ -2,26 +2,26 @@
 function toggleNav() {
   const nav = document.getElementById('sidenav');
   const overlay = document.getElementById('sidenav-overlay');
-  const btn = document.getElementById('nav-toggle');
+  const hbg = document.getElementById('hamburger');
   const isOpen = nav.classList.contains('open');
   if (isOpen) {
     nav.classList.remove('open');
     overlay.classList.remove('visible');
-    if (btn) btn.innerHTML = '<i class="ti ti-menu-2"></i>';
+    if (hbg) hbg.classList.remove('open');
   } else {
     nav.classList.add('open');
     overlay.classList.add('visible');
-    if (btn) btn.innerHTML = '<i class="ti ti-x"></i>';
+    if (hbg) hbg.classList.add('open');
   }
 }
 
 function closeNav() {
   const nav = document.getElementById('sidenav');
   const overlay = document.getElementById('sidenav-overlay');
-  const btn = document.getElementById('nav-toggle');
+  const hbg = document.getElementById('hamburger');
   nav.classList.remove('open');
   overlay.classList.remove('visible');
-  if (btn) btn.innerHTML = '<i class="ti ti-menu-2"></i>';
+  if (hbg) hbg.classList.remove('open');
 }
 
 // ══ SPLASH ══
