@@ -3,333 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SITT — Control de Oficios</title>
+<title>Dirección de Operaciones — SITT Tijuana</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ══════════════ LOGIN ══════════════ -->
 <div id="login-screen">
-  <div class="login-bg"></div>
-  <div class="login-header">
-    <div class="login-brand-text">
-      <div class="login-brand-title">H. AYUNTAMIENTO DE TIJUANA · XXV · 2024–2027</div>
-      <div class="login-brand-sub">SITT — Sistema de Transporte Masivo Urbano de Pasajeros de Tijuana</div>
-    </div>
-  </div>
-  <div class="login-center">
-    <div class="login-hero">
-      <div class="login-hero-badge"><i class="ti ti-files"></i> SISTEMA DOCUMENTAL</div>
-      <h1 class="login-hero-title">Control de<br><span>Oficios</span> e<br>Instrucciones</h1>
-      <p class="login-hero-sub">Plataforma institucional para el registro, seguimiento y control de oficios e instrucciones internas del SITT Tijuana.</p>
-      <div class="login-features">
-        <div class="login-feature"><i class="ti ti-git-branch"></i> Flujo visual por etapas</div>
-        <div class="login-feature"><i class="ti ti-bell"></i> Seguimiento en tiempo real</div>
-        <div class="login-feature"><i class="ti ti-file-report"></i> Generación de reportes PDF y Excel</div>
-        <div class="login-feature"><i class="ti ti-shield-lock"></i> Roles y permisos de usuario</div>
+  <div class="login-particles" id="particles"></div>
+  <div class="login-overlay"></div>
+
+  <header class="login-topbar">
+    <div class="login-topbar-left">
+      <div class="login-escudo">
+        <svg width="44" height="44" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="14" text-anchor="middle" font-size="7" font-weight="800" fill="#4A0F1C">H. XXV</text><text x="22" y="23" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C">AYTO.</text><text x="22" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C">TIJUANA</text><text x="22" y="40" text-anchor="middle" font-size="5" fill="#4A0F1C">2024–2027</text></svg>
+      </div>
+      <div class="login-brand-info">
+        <span class="login-brand-top">H. XXV Ayuntamiento de Tijuana · 2024–2027</span>
+        <span class="login-brand-sub">Sistema de Transporte Masivo Urbano de Pasajeros · SITT</span>
       </div>
     </div>
-    <div class="login-box">
-      <div class="login-box-logo"><i class="ti ti-files"></i></div>
-      <h2>Iniciar sesión</h2>
-      <p>Ingresa tus credenciales institucionales</p>
-      <div class="form-group"><label>Correo electrónico</label><input type="email" id="login-email" placeholder="usuario@sitt.gob.mx" autocomplete="username"></div>
-      <div class="form-group"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"></div>
-      <button class="btn-login" onclick="doLogin()"><i class="ti ti-login"></i> Acceder al sistema</button>
-      <p id="login-error" class="error-msg"></p>
+  </header>
+
+  <div class="login-body">
+    <div class="login-left">
+      <div class="login-dept-badge"><i class="ti ti-building"></i> DIRECCIÓN DE OPERACIONES</div>
+      <h1 class="login-main-title">Sistema de<br>Control de<br><span class="login-gold">Oficios</span></h1>
+      <p class="login-desc">Plataforma institucional para el registro, seguimiento y control de oficios, instrucciones y documentación operativa del SITT Tijuana.</p>
+      <div class="login-features">
+        <div class="lf-item"><i class="ti ti-git-branch"></i><span>Flujo visual por etapas</span></div>
+        <div class="lf-item"><i class="ti ti-file-report"></i><span>Generación de reportes PDF y Word</span></div>
+        <div class="lf-item"><i class="ti ti-bell"></i><span>Seguimiento en tiempo real</span></div>
+        <div class="lf-item"><i class="ti ti-shield-lock"></i><span>Roles y permisos institucionales</span></div>
+      </div>
+    </div>
+    <div class="login-right">
+      <div class="login-card">
+        <div class="login-card-icon"><i class="ti ti-files"></i></div>
+        <h2>Acceso al sistema</h2>
+        <p>Ingresa tus credenciales institucionales</p>
+        <div class="form-group"><label>Correo electrónico</label><input type="email" id="login-email" placeholder="usuario@sitt.gob.mx" autocomplete="username"></div>
+        <div class="form-group"><label>Contraseña</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"></div>
+        <button class="btn-login" onclick="doLogin()"><i class="ti ti-login"></i> Acceder al sistema</button>
+        <p id="login-error" class="error-msg"></p>
+        <div class="login-footer-note"><i class="ti ti-shield-check"></i> Acceso restringido a personal autorizado</div>
+      </div>
     </div>
   </div>
-  <div class="login-footer">Control, seguimiento y eficiencia documental para un mejor servicio público · SITT Tijuana 2024–2027</div>
 </div>
 
-<!-- APP -->
-<div id="app">
+<!-- ══════════════ HOME MENU ══════════════ -->
+<div id="home-screen" style="display:none">
+  <div class="home-bg"></div>
+  <div class="home-overlay"></div>
+  <header class="home-header">
+    <div class="home-header-left">
+      <div class="login-escudo">
+        <svg width="40" height="40" viewBox="0 0 44 44"><rect width="44" height="44" rx="22" fill="#C9A227"/><text x="22" y="14" text-anchor="middle" font-size="7" font-weight="800" fill="#4A0F1C">H. XXV</text><text x="22" y="23" text-anchor="middle" font-size="6" font-weight="700" fill="#4A0F1C">AYTO.</text><text x="22" y="32" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4A0F1C">TIJUANA</text><text x="22" y="40" text-anchor="middle" font-size="5" fill="#4A0F1C">2024–2027</text></svg>
+      </div>
+      <div>
+        <div class="home-header-title">Dirección de Operaciones · SITT</div>
+        <div class="home-header-sub">Sistema de Control de Oficios</div>
+      </div>
+    </div>
+    <div class="home-header-right">
+      <span class="home-user-chip"><i class="ti ti-user-circle"></i> <span id="home-user-name"></span></span>
+      <button class="home-exit-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Salir</button>
+    </div>
+  </header>
+
+  <div class="home-body">
+    <div class="home-welcome">
+      <div class="home-welcome-text">Bienvenido, <span id="home-welcome-name"></span></div>
+      <div class="home-welcome-sub">Selecciona una sección para continuar</div>
+    </div>
+
+    <div class="home-grid">
+      <div class="home-card" onclick="enterApp('oficios')">
+        <div class="home-card-icon" style="background:linear-gradient(135deg,#6B1A2A,#A32D4A)">
+          <i class="ti ti-files"></i>
+        </div>
+        <div class="home-card-content">
+          <h3>Oficios</h3>
+          <p>Registro, seguimiento y control de oficios. Flujo visual por etapas, historial y reportes.</p>
+          <div class="home-card-tags">
+            <span>Flujo visual</span><span>Reportes PDF</span><span>Historial</span>
+          </div>
+        </div>
+        <div class="home-card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
+
+      <div class="home-card" onclick="enterApp('pendientes')">
+        <div class="home-card-icon" style="background:linear-gradient(135deg,#854F0B,#C9A227)">
+          <i class="ti ti-clock"></i>
+        </div>
+        <div class="home-card-content">
+          <h3>Pendientes</h3>
+          <p>Oficios e instrucciones pendientes de atención. Alertas de vencimiento y prioridades.</p>
+          <div class="home-card-tags">
+            <span>Sin respuesta</span><span>Urgentes</span><span>Seguimiento</span>
+          </div>
+        </div>
+        <div class="home-card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
+
+      <div class="home-card" onclick="enterApp('otros')">
+        <div class="home-card-icon" style="background:linear-gradient(135deg,#185FA5,#4A90D9)">
+          <i class="ti ti-layout-grid"></i>
+        </div>
+        <div class="home-card-content">
+          <h3>Otros</h3>
+          <p>Comunicados internos, archivo general, estadísticas y documentación complementaria.</p>
+          <div class="home-card-tags">
+            <span>Comunicados</span><span>Estadísticas</span><span>Archivo</span>
+          </div>
+        </div>
+        <div class="home-card-arrow"><i class="ti ti-arrow-right"></i></div>
+      </div>
+    </div>
+
+    <div class="home-bottom" id="home-ajustes" style="display:none">
+      <button class="home-ajustes-btn" onclick="enterApp('ajustes')">
+        <i class="ti ti-settings"></i> Ajustes del sistema
+        <span style="font-size:11px;opacity:0.7;margin-left:8px">Usuarios · Historial · Perfil</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app" style="display:none">
   <header class="topbar">
     <div class="topbar-left">
+      <button class="btn-back" onclick="goHome()" title="Volver al menú"><i class="ti ti-arrow-left"></i></button>
       <i class="ti ti-files topbar-logo"></i>
-      <span class="topbar-title">SITT · Control de Oficios</span>
+      <span class="topbar-title" id="app-section-title">Oficios — SITT</span>
     </div>
     <div class="topbar-right">
       <span class="user-chip" id="user-name"></span>
-      <button class="btn-ghost-top" onclick="goSection('usuarios',document.querySelector('[data-sec=usuarios]'))" title="Usuarios" id="btn-usuarios" style="display:none"><i class="ti ti-users"></i></button>
-      <button class="btn-ghost-top" onclick="doLogout()" title="Cerrar sesión"><i class="ti ti-logout"></i></button>
+      <button class="btn-ghost-top" onclick="doLogout()" title="Salir"><i class="ti ti-logout"></i></button>
     </div>
   </header>
 
   <div class="layout">
-    <nav class="sidenav">
-      <div class="nav-group-title">Principal</div>
-      <button class="nav-item active" data-sec="dashboard" onclick="goSection('dashboard',this)"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
-
-      <div class="nav-group-title">Oficios</div>
-      <button class="nav-item" data-sec="oficios" onclick="goSection('oficios',this)"><i class="ti ti-file-text"></i> Todos los oficios</button>
-      <button class="nav-item" data-sec="pendientes" onclick="goSection('pendientes',this)"><i class="ti ti-clock"></i> Oficios pendientes</button>
-      <button class="nav-item" data-sec="realizados" onclick="goSection('realizados',this)"><i class="ti ti-circle-check"></i> Oficios realizados</button>
-      <button class="nav-item" data-sec="flujo" onclick="goSection('flujo',this)"><i class="ti ti-git-branch"></i> Flujo por oficio</button>
-
-      <div class="nav-group-title">Instrucciones</div>
-      <button class="nav-item" data-sec="instrucciones" onclick="goSection('instrucciones',this)"><i class="ti ti-list-check"></i> Instrucciones</button>
-
-      <div class="nav-group-title">Reportes</div>
-      <button class="nav-item" data-sec="reportes" onclick="goSection('reportes',this)"><i class="ti ti-report-analytics"></i> Reportes y exportar</button>
-      <button class="nav-item" data-sec="plantillas" onclick="goSection('plantillas',this)"><i class="ti ti-template"></i> Plantillas</button>
-
-      <div class="nav-group-title">Sistema</div>
-      <button class="nav-item" data-sec="historial" onclick="goSection('historial',this)"><i class="ti ti-history"></i> Historial</button>
-      <button class="nav-item" data-sec="usuarios" onclick="goSection('usuarios',this)" id="nav-usuarios" style="display:none"><i class="ti ti-users"></i> Usuarios</button>
-      <button class="nav-item" data-sec="perfil" onclick="goSection('perfil',this)"><i class="ti ti-user-circle"></i> Mi perfil</button>
+    <nav class="sidenav" id="sidenav">
+      <!-- Se llena dinámicamente según la sección -->
     </nav>
-
-    <main class="main-content">
-
-      <!-- DASHBOARD -->
-      <section id="sec-dashboard" class="section active">
-        <div class="page-header">
-          <div><div class="page-eyebrow">PANEL PRINCIPAL</div><h1 class="page-title">Dashboard</h1></div>
-          <div class="header-actions">
-            <button class="btn-primary" onclick="openModal('oficio-modal')"><i class="ti ti-plus"></i> Nuevo oficio</button>
-          </div>
-        </div>
-        <div class="metrics-grid" id="metrics-grid">
-          <div class="metric-card"><div class="metric-icon guinda"><i class="ti ti-files"></i></div><div><div class="metric-label">Total oficios</div><div class="metric-val" id="m-total">—</div></div></div>
-          <div class="metric-card"><div class="metric-icon gold"><i class="ti ti-clock"></i></div><div><div class="metric-label">Pendientes</div><div class="metric-val" id="m-pendientes">—</div></div></div>
-          <div class="metric-card"><div class="metric-icon blue"><i class="ti ti-loader"></i></div><div><div class="metric-label">En proceso</div><div class="metric-val" id="m-proceso">—</div></div></div>
-          <div class="metric-card"><div class="metric-icon green"><i class="ti ti-circle-check"></i></div><div><div class="metric-label">Terminados</div><div class="metric-val" id="m-terminados">—</div></div></div>
-          <div class="metric-card"><div class="metric-icon red"><i class="ti ti-alert-triangle"></i></div><div><div class="metric-label">Sin respuesta</div><div class="metric-val" id="m-sinresp">—</div></div></div>
-          <div class="metric-card"><div class="metric-icon gray"><i class="ti ti-list-check"></i></div><div><div class="metric-label">Instrucciones pend.</div><div class="metric-val" id="m-instr">—</div></div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div class="card"><div class="card-title"><i class="ti ti-chart-donut"></i> Oficios por etapa</div>
-            <div style="position:relative;height:200px"><canvas id="chartEtapas"></canvas></div></div>
-          <div class="card"><div class="card-title"><i class="ti ti-activity"></i> Actividad reciente</div>
-            <div id="activity-list"></div></div>
-        </div>
-      </section>
-
-      <!-- TODOS LOS OFICIOS -->
-      <section id="sec-oficios" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">GESTIÓN</div><h1 class="page-title">Todos los Oficios</h1></div>
-          <div class="header-actions">
-            <button class="btn-outline" onclick="exportarExcel('oficios')"><i class="ti ti-file-spreadsheet"></i> Excel</button>
-            <button class="btn-primary" onclick="openModal('oficio-modal')"><i class="ti ti-plus"></i> Nuevo oficio</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="search-row">
-            <input type="text" id="search-oficios" placeholder="🔍 Buscar por número, tema..." oninput="loadOficiosSec('todos')">
-            <select id="filter-prioridad" onchange="loadOficiosSec('todos')">
-              <option value="">Todas las prioridades</option>
-              <option value="alta">Alta</option>
-              <option value="normal">Normal</option>
-              <option value="baja">Baja</option>
-            </select>
-            <select id="filter-etapa" onchange="loadOficiosSec('todos')">
-              <option value="">Todas las etapas</option>
-              <option value="recibido">Recibido</option>
-              <option value="en_proceso">En proceso</option>
-              <option value="firmado">Firmado</option>
-              <option value="requiere_respuesta">Requiere respuesta</option>
-              <option value="sin_respuesta">Sin respuesta</option>
-              <option value="reiterar">Reiterar</option>
-              <option value="respondido">Respondido</option>
-              <option value="terminado">Terminado</option>
-              <option value="archivado">Archivado</option>
-            </select>
-          </div>
-          <div class="table-wrap"><table>
-            <thead><tr><th>No. Oficio</th><th>Tema</th><th>Departamento</th><th>Asignado a</th><th>Prioridad</th><th>Etapa</th><th>Fecha inicio</th><th>Acciones</th></tr></thead>
-            <tbody id="tbody-oficios"></tbody>
-          </table></div>
-        </div>
-      </section>
-
-      <!-- PENDIENTES -->
-      <section id="sec-pendientes" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">SEGUIMIENTO</div><h1 class="page-title">Oficios Pendientes</h1></div>
-          <div class="header-actions">
-            <button class="btn-outline" onclick="exportarExcel('oficios')"><i class="ti ti-file-spreadsheet"></i> Excel</button>
-            <button class="btn-primary" onclick="openModal('oficio-modal')"><i class="ti ti-plus"></i> Nuevo oficio</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="search-row">
-            <input type="text" id="search-pendientes" placeholder="🔍 Buscar..." oninput="loadOficiosSec('pendientes')">
-          </div>
-          <div class="table-wrap"><table>
-            <thead><tr><th>No. Oficio</th><th>Tema</th><th>Asignado a</th><th>Prioridad</th><th>Etapa actual</th><th>Días en proceso</th><th>Acciones</th></tr></thead>
-            <tbody id="tbody-pendientes"></tbody>
-          </table></div>
-        </div>
-      </section>
-
-      <!-- REALIZADOS -->
-      <section id="sec-realizados" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">ARCHIVO</div><h1 class="page-title">Oficios Realizados</h1></div>
-          <div class="header-actions">
-            <button class="btn-outline" onclick="exportarExcel('oficios')"><i class="ti ti-file-spreadsheet"></i> Excel</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="search-row">
-            <input type="text" id="search-realizados" placeholder="🔍 Buscar..." oninput="loadOficiosSec('realizados')">
-          </div>
-          <div class="table-wrap"><table>
-            <thead><tr><th>No. Oficio</th><th>Tema</th><th>Departamento</th><th>Asignado a</th><th>Etapa final</th><th>Fecha terminación</th><th>Acciones</th></tr></thead>
-            <tbody id="tbody-realizados"></tbody>
-          </table></div>
-        </div>
-      </section>
-
-      <!-- FLUJO VISUAL -->
-      <section id="sec-flujo" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">SEGUIMIENTO VISUAL</div><h1 class="page-title">Flujo Visual de Oficios</h1></div>
-          <div class="header-actions">
-            <button class="btn-outline" onclick="loadFlujoReal()"><i class="ti ti-refresh"></i> Actualizar</button>
-          </div>
-        </div>
-        <div class="card" style="padding:0">
-          <div id="flujo-visual-container"></div>
-        </div>
-        <div class="card" style="margin-top:12px">
-          <div class="card-title"><i class="ti ti-search"></i> Ver detalle de un oficio</div>
-          <div class="search-row">
-            <input type="text" id="search-flujo" placeholder="🔍 Buscar oficio por número o tema..." oninput="searchFlujo()">
-          </div>
-          <div id="flujo-lista"></div>
-        </div>
-        <div id="flujo-detalle" style="display:none">
-          <div class="card">
-            <div class="card-title"><i class="ti ti-git-branch"></i> Historial de etapas: <span id="flujo-numero"></span></div>
-            <div class="flujo-container"><div class="flujo-track" id="flujo-track"></div></div>
-            <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap" id="flujo-acciones"></div>
-          </div>
-          <div class="card">
-            <div class="card-title"><i class="ti ti-history"></i> Historial de movimientos</div>
-            <div id="flujo-historial"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- INSTRUCCIONES -->
-      <section id="sec-instrucciones" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">INSTRUCCIONES</div><h1 class="page-title">Instrucciones Internas</h1></div>
-          <div class="header-actions">
-            <button class="btn-outline" onclick="exportarExcel('instrucciones')"><i class="ti ti-file-spreadsheet"></i> Excel</button>
-            <button class="btn-primary" onclick="openModal('instr-modal')"><i class="ti ti-plus"></i> Nueva instrucción</button>
-          </div>
-        </div>
-        <div class="tab-row">
-          <button class="tab-pill active" onclick="filterInstr('pendiente',this)">Pendientes</button>
-          <button class="tab-pill" onclick="filterInstr('en_proceso',this)">En proceso</button>
-          <button class="tab-pill" onclick="filterInstr('completada',this)">Completadas</button>
-          <button class="tab-pill" onclick="filterInstr('',this)">Todas</button>
-        </div>
-        <div class="card">
-          <div class="search-row">
-            <input type="text" id="search-instr" placeholder="🔍 Buscar por folio o instrucción..." oninput="loadInstrucciones()">
-          </div>
-          <div class="table-wrap"><table>
-            <thead><tr><th>Folio</th><th>Instrucción</th><th>Fecha</th><th>Asignado a</th><th>Prioridad</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tbody-instrucciones"></tbody>
-          </table></div>
-        </div>
-      </section>
-
-      <!-- REPORTES -->
-      <section id="sec-reportes" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">EXPORTAR</div><h1 class="page-title">Reportes</h1></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div class="card">
-            <div class="card-title"><i class="ti ti-file-spreadsheet"></i> Exportar a Excel</div>
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Exporta la lista completa de oficios o instrucciones en formato Excel.</p>
-            <div style="display:flex;flex-direction:column;gap:8px">
-              <button class="btn-outline" onclick="exportarExcel('oficios')" style="justify-content:flex-start"><i class="ti ti-file-spreadsheet"></i> Todos los oficios</button>
-              <button class="btn-outline" onclick="exportarExcel('instrucciones')" style="justify-content:flex-start"><i class="ti ti-file-spreadsheet"></i> Instrucciones</button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title"><i class="ti ti-file-text"></i> Generar PDF por oficio</div>
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">Selecciona un oficio para generar su reporte completo en PDF con historial de movimientos.</p>
-            <div class="form-group">
-              <label>Buscar oficio</label>
-              <input type="text" id="search-reporte" placeholder="Número o tema..." oninput="searchReporte()">
-            </div>
-            <div id="reporte-lista"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PLANTILLAS -->
-      <section id="sec-plantillas" class="section">
-        <div class="page-header">
-          <div><div class="page-eyebrow">CONFIGURACIÓN</div><h1 class="page-title">Plantillas de Reporte</h1></div>
-        </div>
-        <div id="plantillas-content"></div>
-      </section>
-
-      <!-- HISTORIAL -->
-      <section id="sec-historial" class="section">
-        <div class="page-header"><div><div class="page-eyebrow">AUDITORÍA</div><h1 class="page-title">Historial de Cambios</h1></div></div>
-        <div class="card"><div id="historial-content"></div></div>
-      </section>
-
-      <!-- USUARIOS -->
-      <section id="sec-usuarios" class="section">
-        <div class="page-header"><div><div class="page-eyebrow">ADMINISTRACIÓN</div><h1 class="page-title">Usuarios y Accesos</h1></div></div>
-        <div class="tab-row">
-          <button class="tab-pill active" onclick="switchUsuTab('lista',this)"><i class="ti ti-users"></i> Usuarios</button>
-          <button class="tab-pill" onclick="switchUsuTab('nuevo',this)"><i class="ti ti-user-plus"></i> Nuevo usuario</button>
-        </div>
-        <div id="utab-lista" class="utab-content">
-          <div class="card"><div id="usuarios-content"></div></div>
-        </div>
-        <div id="utab-nuevo" class="utab-content" style="display:none">
-          <div class="card" style="max-width:480px">
-            <div class="card-title"><i class="ti ti-user-plus"></i> Nuevo usuario</div>
-            <div class="form-group"><label>Nombre completo</label><input type="text" id="nu-nombre" placeholder="Nombre completo"></div>
-            <div class="form-group"><label>Correo electrónico</label><input type="email" id="nu-email" placeholder="correo@sitt.gob.mx"></div>
-            <div class="form-group"><label>Contraseña inicial</label><input type="password" id="nu-pass" placeholder="Mínimo 6 caracteres"></div>
-            <div class="form-group"><label>Departamento</label><input type="text" id="nu-dep" placeholder="Ej: Dirección General"></div>
-            <div class="form-group"><label>Rol</label>
-              <select id="nu-rol">
-                <option value="admin">Administrador — acceso total</option>
-                <option value="usuario" selected>Usuario — acceso normal</option>
-              </select>
-            </div>
-            <p id="nu-error" style="color:var(--red);font-size:12px;margin-bottom:8px"></p>
-            <button class="btn-primary" onclick="guardarUsuario()"><i class="ti ti-user-plus"></i> Crear usuario</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- PERFIL -->
-      <section id="sec-perfil" class="section">
-        <div class="page-header"><div><div class="page-eyebrow">CUENTA</div><h1 class="page-title">Mi Perfil</h1></div></div>
-        <div class="card" style="max-width:440px">
-          <div class="card-title"><i class="ti ti-lock"></i> Cambiar contraseña</div>
-          <div class="form-group"><label>Contraseña actual</label><input type="password" id="pass-actual" placeholder="••••••••"></div>
-          <div class="form-group"><label>Nueva contraseña</label><input type="password" id="pass-nueva" placeholder="Mínimo 6 caracteres"></div>
-          <div class="form-group"><label>Confirmar nueva contraseña</label><input type="password" id="pass-confirma" placeholder="Repite la nueva"></div>
-          <p id="pass-error" style="color:var(--red);font-size:12px;margin-bottom:8px"></p>
-          <button class="btn-primary" onclick="cambiarPassword()"><i class="ti ti-check"></i> Actualizar contraseña</button>
-        </div>
-      </section>
-
+    <main class="main-content" id="main-content">
+      <!-- Se llena dinámicamente -->
     </main>
   </div>
 </div>
 
-<!-- MODAL: OFICIO -->
+<!-- ══════════════ MODALES ══════════════ -->
 <div class="modal-overlay" id="oficio-modal" style="display:none">
   <div class="modal">
     <div class="modal-header"><h3 id="oficio-modal-title">Nuevo Oficio</h3><button onclick="closeModal('oficio-modal')"><i class="ti ti-x"></i></button></div>
@@ -343,10 +172,8 @@
     <div class="form-group"><label>Tema / Asunto *</label><input type="text" id="of-tema" placeholder="Descripción breve del tema"></div>
     <div class="form-group"><label>Descripción</label><textarea id="of-descripcion" rows="3" placeholder="Descripción detallada..."></textarea></div>
     <div class="form-row">
-      <div class="form-group"><label>Departamento</label><input type="text" id="of-departamento" placeholder="Ej: Dirección General"></div>
-      <div class="form-group"><label>Asignado a</label>
-        <select id="of-asignado"><option value="">Sin asignar</option></select>
-      </div>
+      <div class="form-group"><label>Departamento</label><input type="text" id="of-departamento" placeholder="Ej: Dirección de Operaciones"></div>
+      <div class="form-group"><label>Asignado a</label><select id="of-asignado"><option value="">Sin asignar</option></select></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>Fecha de inicio</label><input type="date" id="of-fecha-inicio"></div>
@@ -369,7 +196,6 @@
   </div>
 </div>
 
-<!-- MODAL: ETAPA -->
 <div class="modal-overlay" id="etapa-modal" style="display:none">
   <div class="modal" style="max-width:440px">
     <div class="modal-header"><h3>Mover a siguiente etapa</h3><button onclick="closeModal('etapa-modal')"><i class="ti ti-x"></i></button></div>
@@ -396,7 +222,6 @@
   </div>
 </div>
 
-<!-- MODAL: INSTRUCCION -->
 <div class="modal-overlay" id="instr-modal" style="display:none">
   <div class="modal">
     <div class="modal-header"><h3 id="instr-modal-title">Nueva Instrucción</h3><button onclick="closeModal('instr-modal')"><i class="ti ti-x"></i></button></div>
@@ -410,9 +235,7 @@
     <div class="form-group"><label>Instrucción *</label><textarea id="instr-texto" rows="4" placeholder="Descripción de la instrucción..."></textarea></div>
     <div class="form-row">
       <div class="form-group"><label>Fecha</label><input type="date" id="instr-fecha"></div>
-      <div class="form-group"><label>Asignado a</label>
-        <select id="instr-asignado"><option value="">Sin asignar</option></select>
-      </div>
+      <div class="form-group"><label>Asignado a</label><select id="instr-asignado"><option value="">Sin asignar</option></select></div>
     </div>
     <div class="form-group"><label>Estado</label>
       <select id="instr-estado"><option value="pendiente">Pendiente</option><option value="en_proceso">En proceso</option><option value="completada">Completada</option></select>
