@@ -1,249 +1,319 @@
-// Flujo Visual Interactivo de Oficios
-// Se llama desde la sección de flujo del sistema
-
-const NODO_POS = {
-  recibido:    {x:68,  y:210, label:'Recibido',    color:'#185FA5'},
-  proceso:     {x:196, y:210, label:'En proceso',  color:'#185FA5'},
-  firmado:     {x:324, y:210, label:'Firmado',     color:'#C9A227'},
-  decision:    {x:420, y:210, label:'¿Req. resp?', color:'#854F0B'},
-  sinresp:     {x:540, y:128, label:'Sin resp.',   color:'#A32D2D'},
-  reiterar:    {x:540, y:188, label:'Reiterar',    color:'#A32D2D'},
-  respondido:  {x:540, y:248, label:'Respondido',  color:'#0F6E56'},
-  terminado:   {x:540, y:320, label:'Terminado',   color:'#0F6E56'},
-  archivado:   {x:324, y:332, label:'Archivado',   color:'#888'},
-  instruccion: {x:68,  y:332, label:'Instrucción', color:'#9B59B6'}
+// ══ FLUJO VISUAL DINÁMICO ══
+const NODOS = {
+  // FLUJO CON RESPUESTA
+  req: {
+    recibido:   {x:60,  y:185, label:'Recibido',       color:'#185FA5', icon:'📥'},
+    proceso:    {x:185, y:185, label:'En proceso',      color:'#185FA5', icon:'⚙️'},
+    firmado:    {x:310, y:185, label:'Firmado',         color:'#C9A227', icon:'✍️'},
+    sinresp:    {x:460, y:110, label:'Sin respuesta',   color:'#A32D2D', icon:'⚠️'},
+    reiterar:   {x:460, y:170, label:'Reiterar',        color:'#A32D2D', icon:'🔁'},
+    respondido: {x:460, y:240, label:'Respondido',      color:'#0F6E56', icon:'✅'},
+    terminado:  {x:460, y:305, label:'Terminado',       color:'#0F6E56', icon:'🏁'},
+    archivado:  {x:310, y:320, label:'Archivado',       color:'#666',    icon:'📁'}
+  },
+  // FLUJO SIN RESPUESTA
+  noreq: {
+    recibido:   {x:80,  y:185, label:'Recibido',       color:'#185FA5', icon:'📥'},
+    proceso:    {x:220, y:185, label:'En proceso',      color:'#185FA5', icon:'⚙️'},
+    firmado:    {x:360, y:185, label:'Firmado',         color:'#C9A227', icon:'✍️'},
+    archivado:  {x:500, y:185, label:'Archivado',       color:'#666',    icon:'📁'},
+    terminado:  {x:500, y:290, label:'Terminado',       color:'#0F6E56', icon:'🏁'}
+  }
 };
 
-function initFlujoVisual(oficiosData) {
+let flujoModo = 'req';
+let flujoOficiosData = [];
+let flujoAnimId = null;
+let flujoOficioSeleccionado = null;
+
+function initFlujoVisual(oficios) {
+  flujoOficiosData = oficios || [];
+  renderFlujoCompleto();
+}
+
+function renderFlujoCompleto() {
   const container = document.getElementById('flujo-visual-container');
   if (!container) return;
 
+  const nodos = NODOS[flujoModo];
+  const svgContent = buildFlujSVG(nodos);
+  const instrs = flujoOficiosData.filter ? [] : [];
+
   container.innerHTML = `
     <div style="padding:16px">
-      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
-        <span style="font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Oficios en el sistema:</span>
-        <div style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:10px;height:10px;border-radius:50%;background:#185FA5;display:inline-block"></span> En proceso</div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:10px;height:10px;border-radius:50%;background:#C9A227;display:inline-block"></span> Requiere atención</div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:10px;height:10px;border-radius:50%;background:#A32D2D;display:inline-block"></span> Sin respuesta</div>
-        <div style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:10px;height:10px;border-radius:50%;background:#0F6E56;display:inline-block"></span> Terminado</div>
+      <div class="flujo-mode-btns">
+        <button class="flujo-mode-btn ${flujoModo==='req'?'active-mode':''}" onclick="setFlujoModo('req')">
+          <i class="ti ti-help-circle"></i> Se requiere respuesta
+        </button>
+        <button class="flujo-mode-btn ${flujoModo==='noreq'?'active-mode':''}" onclick="setFlujoModo('noreq')">
+          <i class="ti ti-check"></i> No se requiere respuesta
+        </button>
       </div>
-      <p style="font-size:11px;color:var(--text-muted);margin-bottom:12px">Haz clic en cualquier punto para ver el detalle del oficio</p>
-      <div style="overflow-x:auto">
-        <svg id="flujo-svg-real" width="100%" viewBox="0 0 680 420" style="min-width:600px">
-          <defs>
-            <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </marker>
-          </defs>
-          <!-- Fondo -->
-          <rect width="680" height="420" rx="12" fill="transparent"/>
-
-          <!-- NODOS -->
-          <rect x="20" y="188" width="96" height="44" rx="8" fill="white" stroke="#185FA5" stroke-width="1.5"/>
-          <text x="68" y="206" text-anchor="middle" font-size="10" font-weight="600" fill="#185FA5">📥 Recibido</text>
-          <text x="68" y="220" text-anchor="middle" font-size="8" fill="#888">N°, tema, cantidad</text>
-
-          <rect x="148" y="188" width="96" height="44" rx="8" fill="white" stroke="#185FA5" stroke-width="1.5"/>
-          <text x="196" y="206" text-anchor="middle" font-size="10" font-weight="600" fill="#185FA5">⚙️ En proceso</text>
-          <text x="196" y="220" text-anchor="middle" font-size="8" fill="#888">Asignado a</text>
-
-          <rect x="276" y="188" width="96" height="44" rx="8" fill="white" stroke="#C9A227" stroke-width="1.5"/>
-          <text x="324" y="206" text-anchor="middle" font-size="10" font-weight="600" fill="#854F0B">✍️ Firmado</text>
-          <text x="324" y="220" text-anchor="middle" font-size="8" fill="#888">Fecha despacho</text>
-
-          <!-- Diamante decisión -->
-          <polygon points="420,188 460,210 420,232 380,210" fill="white" stroke="#854F0B" stroke-width="1.5"/>
-          <text x="420" y="207" text-anchor="middle" font-size="8" font-weight="600" fill="#854F0B">¿Requiere</text>
-          <text x="420" y="217" text-anchor="middle" font-size="8" font-weight="600" fill="#854F0B">respuesta?</text>
-
-          <rect x="490" y="100" width="100" height="40" rx="8" fill="white" stroke="#A32D2D" stroke-width="1.5"/>
-          <text x="540" y="116" text-anchor="middle" font-size="10" font-weight="600" fill="#A32D2D">⚠️ Sin resp.</text>
-          <text x="540" y="130" text-anchor="middle" font-size="8" fill="#888">Sin respuesta</text>
-
-          <rect x="490" y="160" width="100" height="40" rx="8" fill="white" stroke="#A32D2D" stroke-width="1.5"/>
-          <text x="540" y="176" text-anchor="middle" font-size="10" font-weight="600" fill="#A32D2D">🔁 Reiterar</text>
-          <text x="540" y="190" text-anchor="middle" font-size="8" fill="#888">Recordatorio</text>
-
-          <rect x="490" y="220" width="100" height="40" rx="8" fill="white" stroke="#0F6E56" stroke-width="1.5"/>
-          <text x="540" y="236" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">✅ Respondido</text>
-          <text x="540" y="250" text-anchor="middle" font-size="8" fill="#888">Con fecha resp.</text>
-
-          <rect x="490" y="280" width="100" height="40" rx="8" fill="white" stroke="#0F6E56" stroke-width="1.5"/>
-          <text x="540" y="296" text-anchor="middle" font-size="10" font-weight="600" fill="#0F6E56">🏁 Terminado</text>
-          <text x="540" y="310" text-anchor="middle" font-size="8" fill="#888">Se termina asunto</text>
-
-          <rect x="276" y="300" width="96" height="44" rx="8" fill="white" stroke="#888" stroke-width="1.5"/>
-          <text x="324" y="318" text-anchor="middle" font-size="10" font-weight="600" fill="#555">📁 Archivado</text>
-          <text x="324" y="332" text-anchor="middle" font-size="8" fill="#888">Concluido</text>
-
-          <rect x="20" y="300" width="96" height="44" rx="8" fill="white" stroke="#9B59B6" stroke-width="1.5" stroke-dasharray="4,2"/>
-          <text x="68" y="318" text-anchor="middle" font-size="10" font-weight="600" fill="#9B59B6">📋 Instrucción</text>
-          <text x="68" y="332" text-anchor="middle" font-size="8" fill="#888">Pendiente/D.G.</text>
-
-          <!-- FLECHAS -->
-          <line x1="116" y1="210" x2="146" y2="210" stroke="#888" stroke-width="1" marker-end="url(#arr2)" fill="none"/>
-          <line x1="244" y1="210" x2="274" y2="210" stroke="#888" stroke-width="1" marker-end="url(#arr2)" fill="none"/>
-          <line x1="372" y1="210" x2="378" y2="210" stroke="#888" stroke-width="1" marker-end="url(#arr2)" fill="none"/>
-          <!-- Decision → archivado (no) -->
-          <path d="M420 232 L420 322 L374 322" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
-          <text x="400" y="265" font-size="8" fill="#888" text-anchor="middle">No requiere</text>
-          <!-- Decision → sin resp -->
-          <path d="M460 210 L540 210 L540 140" fill="none" stroke="#A32D2D" stroke-width="1" marker-end="url(#arr2)"/>
-          <text x="500" y="205" font-size="8" fill="#A32D2D" text-anchor="middle">Sí</text>
-          <!-- Sin resp → reiterar -->
-          <line x1="540" y1="140" x2="540" y2="158" stroke="#A32D2D" stroke-width="1" marker-end="url(#arr2)" fill="none"/>
-          <!-- Reiterar → loop regresa -->
-          <path d="M490 180 L68 180 L68 186" fill="none" stroke="#A32D2D" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr2)"/>
-          <text x="280" y="174" font-size="8" fill="#A32D2D" text-anchor="middle">Se reitera petición (recordatorio)</text>
-          <!-- Decision → respondido -->
-          <path d="M460 210 L540 210 L540 220" fill="none" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
-          <!-- Respondido → terminado -->
-          <line x1="540" y1="260" x2="540" y2="278" stroke="#0F6E56" stroke-width="1" marker-end="url(#arr2)" fill="none"/>
-          <!-- Terminado → archivado -->
-          <path d="M490 300 L374 322" fill="none" stroke="#0F6E56" stroke-width="1" marker-end="url(#arr2)"/>
-          <!-- Instruccion → proceso -->
-          <path d="M116 322 L196 322 L196 234" fill="none" stroke="#9B59B6" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
-          <text x="160" y="355" font-size="8" fill="#9B59B6" text-anchor="middle">→ genera oficio</text>
-
-          <!-- CAPA DE OFICIOS -->
+      <div class="flujo-svg-wrap">
+        <svg id="flujo-svg-real" width="100%" viewBox="0 0 580 400" style="min-width:520px;display:block">
+          ${svgContent}
           <g id="oficios-puntos"></g>
         </svg>
       </div>
-
-      <!-- Stats -->
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px">
-        <div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
-          <div style="font-size:22px;font-weight:700;color:#185FA5" id="fv-proceso">0</div>
-          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase">En proceso</div>
-        </div>
-        <div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
-          <div style="font-size:22px;font-weight:700;color:#A32D2D" id="fv-sinresp">0</div>
-          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase">Sin respuesta</div>
-        </div>
-        <div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
-          <div style="font-size:22px;font-weight:700;color:#A32D2D" id="fv-reiterar">0</div>
-          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase">Reiterados</div>
-        </div>
-        <div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
-          <div style="font-size:22px;font-weight:700;color:#0F6E56" id="fv-term">0</div>
-          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase">Terminados</div>
-        </div>
-        <div style="background:var(--bg);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--border)">
-          <div style="font-size:22px;font-weight:700;color:#9B59B6" id="fv-instr">0</div>
-          <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase">Instrucciones</div>
-        </div>
+      <div class="flujo-stats" id="flujo-stats-bar"></div>
+      <div class="instr-flujo-wrap" id="instrucciones-flujo">
+        <div class="instr-flujo-title"><i class="ti ti-list-check"></i> Instrucciones activas</div>
+        <div id="instr-flujo-list"><div style="font-size:12px;color:#888">Cargando...</div></div>
       </div>
-    </div>
-  `;
+    </div>`;
 
-  renderPuntos(oficiosData);
+  startFlujoAnim();
+  loadInstruccionesFlujo();
 }
 
-function etapaToNodo(etapa) {
-  const map = {
+function buildFlujSVG(nodos) {
+  const flechas = flujoModo === 'req' ? `
+    <defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+    <rect width="580" height="400" rx="14" fill="#FAFBFD"/>
+    <!-- Flechas principales -->
+    <line x1="100" y1="199" x2="148" y2="199" stroke="#888" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <line x1="225" y1="199" x2="273" y2="199" stroke="#888" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <line x1="350" y1="199" x2="395" y2="175" stroke="#C9A227" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <text x="370" y="175" font-size="8" fill="#854F0B" text-anchor="middle">Sí</text>
+    <!-- Sin resp → Reiterar -->
+    <line x1="460" y1="132" x2="460" y2="150" stroke="#A32D2D" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <!-- Reiterar → regresa a Recibido (arco superior) -->
+    <path d="M420 170 L60 170 L60 165" fill="none" stroke="#A32D2D" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#fa)"/>
+    <text x="240" y="162" font-size="8" fill="#A32D2D" text-anchor="middle">Se reitera petición</text>
+    <!-- Decision → respondido -->
+    <line x1="395" y1="210" x2="420" y2="245" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#fa)" fill="none"/>
+    <!-- Respondido → terminado -->
+    <line x1="460" y1="262" x2="460" y2="285" stroke="#0F6E56" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <!-- Terminado → archivado -->
+    <path d="M420 305 L350 330" fill="none" stroke="#0F6E56" stroke-width="1" marker-end="url(#fa)"/>
+    <!-- No requiere respuesta → archivado -->
+    <path d="M350 210 L350 250 L290 330" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#fa)"/>
+    <text x="320" y="270" font-size="8" fill="#888" text-anchor="middle">No</text>
+    <!-- Diamante decisión -->
+    <polygon points="373,199 395,186 417,199 395,212" fill="white" stroke="#854F0B" stroke-width="1.5"/>
+    <text x="395" y="196" font-size="7" font-weight="600" fill="#854F0B" text-anchor="middle">¿Req.</text>
+    <text x="395" y="205" font-size="7" font-weight="600" fill="#854F0B" text-anchor="middle">resp?</text>
+  ` : `
+    <defs><marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/></marker></defs>
+    <rect width="580" height="400" rx="14" fill="#FAFBFD"/>
+    <line x1="120" y1="199" x2="182" y2="199" stroke="#888" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <line x1="262" y1="199" x2="322" y2="199" stroke="#888" stroke-width="1" marker-end="url(#fa)" fill="none"/>
+    <line x1="402" y1="199" x2="462" y2="199" stroke="#C9A227" stroke-width="1.5" marker-end="url(#fa)" fill="none"/>
+    <text x="432" y="192" font-size="9" fill="#854F0B" text-anchor="middle">No req. resp.</text>
+    <!-- Archivado → terminado (también puede terminar) -->
+    <line x1="500" y1="207" x2="500" y2="272" stroke="#0F6E56" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#fa)" fill="none"/>
+  `;
+
+  let nodosSVG = '';
+  Object.entries(nodos).forEach(([key, n]) => {
+    const w = 88, h = 36;
+    const x = n.x - w/2, y = n.y - h/2;
+    nodosSVG += `
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="white" stroke="${n.color}" stroke-width="1.5"/>
+      <text x="${n.x}" y="${n.y - 5}" text-anchor="middle" font-size="11" fill="${n.color}" font-weight="600">${n.icon} ${n.label.length > 10 ? n.label.substring(0,9)+'…' : n.label}</text>
+    `;
+  });
+
+  return flechas + nodosSVG;
+}
+
+function setFlujoModo(modo) {
+  flujoModo = modo;
+  renderFlujoCompleto();
+}
+
+function startFlujoAnim() {
+  if (flujoAnimId) cancelAnimationFrame(flujoAnimId);
+  function loop() {
+    renderPuntosOficiosEnFlujo();
+    flujoAnimId = requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function stopFlujoAnim() {
+  if (flujoAnimId) cancelAnimationFrame(flujoAnimId);
+}
+
+function etapaANodo(etapa, modo) {
+  const mapReq = {
     recibido:'recibido', en_proceso:'proceso', firmado:'firmado',
-    requiere_respuesta:'decision', sin_respuesta:'sinresp',
+    requiere_respuesta:'sinresp', sin_respuesta:'sinresp',
     reiterar:'reiterar', respondido:'respondido',
     terminado:'terminado', archivado:'archivado'
   };
-  return map[etapa] || 'recibido';
+  const mapNoReq = {
+    recibido:'recibido', en_proceso:'proceso', firmado:'firmado',
+    terminado:'terminado', archivado:'archivado',
+    respondido:'archivado', sin_respuesta:'archivado',
+    reiterar:'recibido', requiere_respuesta:'archivado'
+  };
+  return (modo === 'req' ? mapReq : mapNoReq)[etapa] || 'recibido';
 }
 
-function renderPuntos(oficios) {
+function renderPuntosOficiosEnFlujo() {
   const layer = document.getElementById('oficios-puntos');
   if (!layer) return;
   layer.innerHTML = '';
-  const counts = {proceso:0, sinresp:0, reiterar:0, term:0, instr:0};
-  const t = Date.now() / 800;
-  const grupoPorNodo = {};
+  const nodos = NODOS[flujoModo];
+  const t = Date.now() / 900;
+  const counts = {recibido:0,proceso:0,firmado:0,sinresp:0,reiterar:0,respondido:0,terminado:0,archivado:0};
+  const grupos = {};
 
-  oficios.forEach(of => {
-    const nodoKey = etapaToNodo(of.etapa);
-    if (!grupoPorNodo[nodoKey]) grupoPorNodo[nodoKey] = [];
-    grupoPorNodo[nodoKey].push(of);
+  flujoOficiosData.forEach(of => {
+    const nk = etapaANodo(of.etapa, flujoModo);
+    if (!grupos[nk]) grupos[nk] = [];
+    grupos[nk].push(of);
+    if (counts[nk] !== undefined) counts[nk]++;
   });
 
-  Object.entries(grupoPorNodo).forEach(([nodoKey, lista]) => {
-    const pos = NODO_POS[nodoKey];
+  Object.entries(grupos).forEach(([nk, lista]) => {
+    const pos = nodos[nk];
     if (!pos) return;
-    lista.forEach((of, idx) => {
-      const angulo = (idx / Math.max(lista.length,1)) * Math.PI * 2;
-      const radio = lista.length > 1 ? 10 : 0;
-      const jx = Math.cos(angulo + t * 0.3) * radio;
-      const jy = Math.sin(angulo + t * 0.3) * radio;
-      const cx = pos.x + jx;
-      const cy = pos.y + jy;
+    lista.forEach((of, i) => {
+      const total = lista.length;
+      const angulo = (i / Math.max(total,1)) * Math.PI * 2 + t * 0.4;
+      const radio = total > 1 ? Math.min(14, 6 + total * 2) : 0;
+      const cx = pos.x + Math.cos(angulo) * radio;
+      const cy = pos.y + Math.sin(angulo) * radio;
       const color = pos.color;
-      const esCritico = ['sinresp','reiterar','decision'].includes(nodoKey);
+      const esCritico = ['sinresp','reiterar'].includes(nk);
+      const esSeleccionado = flujoOficioSeleccionado && flujoOficioSeleccionado.id === of.id;
 
       const g = document.createElementNS('http://www.w3.org/2000/svg','g');
       g.style.cursor = 'pointer';
 
+      // Halo crítico
       if (esCritico) {
-        const halo = document.createElementNS('http://www.w3.org/2000/svg','circle');
-        halo.setAttribute('cx', cx);
-        halo.setAttribute('cy', cy);
-        halo.setAttribute('r', 11 + Math.sin(t * 4 + idx) * 3);
-        halo.setAttribute('fill', color);
-        halo.setAttribute('opacity', '0.15');
-        g.appendChild(halo);
+        const h = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        h.setAttribute('cx', cx);
+        h.setAttribute('cy', cy);
+        h.setAttribute('r', 12 + Math.sin(t*3+i)*3);
+        h.setAttribute('fill', color);
+        h.setAttribute('opacity','0.18');
+        g.appendChild(h);
+      }
+
+      // Halo seleccionado
+      if (esSeleccionado) {
+        const hs = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        hs.setAttribute('cx', cx);
+        hs.setAttribute('cy', cy);
+        hs.setAttribute('r', 13);
+        hs.setAttribute('fill', 'none');
+        hs.setAttribute('stroke', '#C9A227');
+        hs.setAttribute('stroke-width', '2');
+        g.appendChild(hs);
       }
 
       const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
       c.setAttribute('cx', cx);
       c.setAttribute('cy', cy);
-      c.setAttribute('r', 7);
+      c.setAttribute('r', 8);
       c.setAttribute('fill', color);
       c.setAttribute('stroke', '#fff');
       c.setAttribute('stroke-width', '1.5');
       g.appendChild(c);
 
-      const txt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      txt.setAttribute('x', cx);
-      txt.setAttribute('y', cy + 0.5);
-      txt.setAttribute('text-anchor','middle');
-      txt.setAttribute('dominant-baseline','central');
-      txt.setAttribute('font-size','6');
-      txt.setAttribute('font-weight','700');
-      txt.setAttribute('fill','#fff');
-      txt.setAttribute('pointer-events','none');
-      txt.textContent = of.id;
-      g.appendChild(txt);
+      // Etiqueta con número de oficio (no solo ID)
+      const numCorto = (of.numero || String(of.id)).replace('OF-2026-','').replace('OF-','');
+      const lbl = document.createElementNS('http://www.w3.org/2000/svg','text');
+      lbl.setAttribute('x', cx);
+      lbl.setAttribute('y', cy + 0.5);
+      lbl.setAttribute('text-anchor','middle');
+      lbl.setAttribute('dominant-baseline','central');
+      lbl.setAttribute('font-size','6');
+      lbl.setAttribute('font-weight','700');
+      lbl.setAttribute('fill','#fff');
+      lbl.setAttribute('pointer-events','none');
+      lbl.textContent = numCorto.length > 4 ? numCorto.substring(0,4) : numCorto;
+      g.appendChild(lbl);
+
+      // Tooltip flotante sobre el SVG
+      const titulo = document.createElementNS('http://www.w3.org/2000/svg','title');
+      titulo.textContent = `${of.numero || 'OF-'+of.id}: ${of.tema || ''} | Etapa: ${of.etapa || ''} | ${of.asignado_nombre || 'Sin asignar'}`;
+      g.appendChild(titulo);
 
       g.addEventListener('click', () => {
-        const etapaLabel = of.etapa?.replace(/_/g,' ') || '—';
-        alert(`📄 ${of.numero}\n\n📌 ${of.tema}\n\n🔀 Etapa: ${etapaLabel}\n👤 Asignado a: ${of.asignado_nombre||'Sin asignar'}\n📅 Inicio: ${of.fecha_inicio||'—'}`);
+        flujoOficioSeleccionado = of;
+        mostrarOficioGrande(of);
       });
 
       layer.appendChild(g);
-
-      if (['recibido','proceso','firmado','decision'].includes(nodoKey)) counts.proceso++;
-      if (nodoKey === 'sinresp') counts.sinresp++;
-      if (nodoKey === 'reiterar') counts.reiterar++;
-      if (['terminado','archivado'].includes(nodoKey)) counts.term++;
     });
   });
 
-  const fvProceso = document.getElementById('fv-proceso');
-  if (fvProceso) fvProceso.textContent = counts.proceso;
-  const fvSinresp = document.getElementById('fv-sinresp');
-  if (fvSinresp) fvSinresp.textContent = counts.sinresp;
-  const fvReit = document.getElementById('fv-reiterar');
-  if (fvReit) fvReit.textContent = counts.reiterar;
-  const fvTerm = document.getElementById('fv-term');
-  if (fvTerm) fvTerm.textContent = counts.term;
-}
-
-let flujoAnimFrame = null;
-function startFlujoAnimation(getOficios) {
-  if (flujoAnimFrame) cancelAnimationFrame(flujoAnimFrame);
-  function loop() {
-    renderPuntos(getOficios());
-    flujoAnimFrame = requestAnimationFrame(loop);
+  // Stats
+  const bar = document.getElementById('flujo-stats-bar');
+  if (bar) {
+    const total = flujoOficiosData.length;
+    const enProc = (counts.recibido||0)+(counts.proceso||0)+(counts.firmado||0);
+    const atencion = (counts.sinresp||0)+(counts.reiterar||0);
+    const term = (counts.terminado||0)+(counts.archivado||0);
+    bar.innerHTML = `
+      <div class="flujo-stat"><div class="flujo-stat-val" style="color:#185FA5">${total}</div><div class="flujo-stat-label">Total</div></div>
+      <div class="flujo-stat"><div class="flujo-stat-val" style="color:#185FA5">${enProc}</div><div class="flujo-stat-label">En proceso</div></div>
+      <div class="flujo-stat"><div class="flujo-stat-val" style="color:#A32D2D">${atencion}</div><div class="flujo-stat-label">Requieren atención</div></div>
+      <div class="flujo-stat"><div class="flujo-stat-val" style="color:#0F6E56">${term}</div><div class="flujo-stat-label">Terminados</div></div>
+      <div class="flujo-stat"><div class="flujo-stat-val" style="color:#C9A227">${counts.respondido||0}</div><div class="flujo-stat-label">Respondidos</div></div>`;
   }
-  loop();
 }
 
-function stopFlujoAnimation() {
-  if (flujoAnimFrame) cancelAnimationFrame(flujoAnimFrame);
+function mostrarOficioGrande(of) {
+  const el = document.getElementById('oficio-seleccionado-grande');
+  if (!el) return;
+  const etapaLabel = (of.etapa||'').replace(/_/g,' ').toUpperCase();
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="oficio-grande">
+      <div class="oficio-grande-header">
+        <div>
+          <div class="oficio-grande-num">${of.numero || 'OF-'+of.id}</div>
+          <div class="oficio-grande-tema">${of.tema || ''}</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="badge ${etapaBadgeClass(of.etapa)}">${etapaLabel}</span>
+          <button class="btn-primary" onclick="openEtapaModal(${of.id},'${of.numero}','${of.etapa}')"><i class="ti ti-git-branch"></i> Mover etapa</button>
+          <button class="btn-gold" onclick="generarPDF(${of.id},'${of.numero}')"><i class="ti ti-file-text"></i> PDF</button>
+          <button class="btn-outline" onclick="document.getElementById('oficio-seleccionado-grande').style.display='none'"><i class="ti ti-x"></i></button>
+        </div>
+      </div>
+      <div class="oficio-grande-grid">
+        <div class="oficio-campo"><div class="oficio-campo-label">Departamento</div><div class="oficio-campo-val">${of.departamento||'—'}</div></div>
+        <div class="oficio-campo"><div class="oficio-campo-label">Asignado a</div><div class="oficio-campo-val">${of.asignado_nombre||'—'}</div></div>
+        <div class="oficio-campo"><div class="oficio-campo-label">Prioridad</div><div class="oficio-campo-val">${(of.prioridad||'').toUpperCase()}</div></div>
+        <div class="oficio-campo"><div class="oficio-campo-label">Fecha inicio</div><div class="oficio-campo-val">${of.fecha_inicio||'—'}</div></div>
+        <div class="oficio-campo"><div class="oficio-campo-label">Fecha despacho</div><div class="oficio-campo-val">${of.fecha_despacho||'—'}</div></div>
+        <div class="oficio-campo"><div class="oficio-campo-label">Fecha respuesta</div><div class="oficio-campo-val">${of.fecha_respuesta||'—'}</div></div>
+      </div>
+      ${of.observaciones ? `<div style="background:var(--bg);border-radius:8px;padding:10px 12px;font-size:13px"><strong>Observaciones:</strong> ${of.observaciones}</div>` : ''}
+    </div>`;
+}
+
+function etapaBadgeClass(etapa) {
+  const m = {recibido:'badge-proc',en_proceso:'badge-proc',firmado:'badge-proc',
+    requiere_respuesta:'badge-pend',sin_respuesta:'badge-sin',reiterar:'badge-sin',
+    respondido:'badge-term',terminado:'badge-term',archivado:'badge-arch'};
+  return m[etapa] || 'badge-normal';
+}
+
+async function loadInstruccionesFlujo() {
+  const el = document.getElementById('instr-flujo-list');
+  if (!el) return;
+  try {
+    const r = await fetch('/api/instrucciones?estado=pendiente', {credentials:'include'});
+    const data = await r.json();
+    if (!data || !data.length) { el.innerHTML = '<div style="font-size:12px;color:#888;padding:4px">Sin instrucciones pendientes</div>'; return; }
+    el.innerHTML = data.slice(0,5).map(i => `
+      <div class="instr-item">
+        <div>
+          <strong style="color:#9B59B6">${i.folio}</strong>
+          <span style="margin-left:8px;color:var(--text-muted)">${(i.instruccion||'').substring(0,50)}${i.instruccion?.length>50?'...':''}</span>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="badge" style="background:rgba(155,89,182,0.1);color:#9B59B6">${i.prioridad||'normal'}</span>
+          ${!i.convertido_oficio ? `<button class="btn-sm" style="background:rgba(155,89,182,0.12);color:#9B59B6;border:none;cursor:pointer" onclick="convertirInstr(${i.id},'${i.folio}')"><i class="ti ti-file-plus"></i> → Oficio</button>` : '<span style="font-size:11px;color:#0F6E56">✅ Convertida</span>'}
+        </div>
+      </div>`).join('');
+  } catch(e) { el.innerHTML = '<div style="font-size:12px;color:#888">Error cargando instrucciones</div>'; }
 }
