@@ -189,9 +189,16 @@
       <!-- FLUJO VISUAL -->
       <section id="sec-flujo" class="section">
         <div class="page-header">
-          <div><div class="page-eyebrow">SEGUIMIENTO VISUAL</div><h1 class="page-title">Flujo por Oficio</h1></div>
+          <div><div class="page-eyebrow">SEGUIMIENTO VISUAL</div><h1 class="page-title">Flujo Visual de Oficios</h1></div>
+          <div class="header-actions">
+            <button class="btn-outline" onclick="loadFlujoReal()"><i class="ti ti-refresh"></i> Actualizar</button>
+          </div>
         </div>
-        <div class="card" style="margin-bottom:12px">
+        <div class="card" style="padding:0">
+          <div id="flujo-visual-container"></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <div class="card-title"><i class="ti ti-search"></i> Ver detalle de un oficio</div>
           <div class="search-row">
             <input type="text" id="search-flujo" placeholder="🔍 Buscar oficio por número o tema..." oninput="searchFlujo()">
           </div>
@@ -199,7 +206,7 @@
         </div>
         <div id="flujo-detalle" style="display:none">
           <div class="card">
-            <div class="card-title"><i class="ti ti-git-branch"></i> Flujo del oficio: <span id="flujo-numero"></span></div>
+            <div class="card-title"><i class="ti ti-git-branch"></i> Historial de etapas: <span id="flujo-numero"></span></div>
             <div class="flujo-container"><div class="flujo-track" id="flujo-track"></div></div>
             <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap" id="flujo-acciones"></div>
           </div>
@@ -419,6 +426,7 @@
 </div>
 
 <div id="toast" style="display:none" class="toast"></div>
+<script src="js/flujo-visual.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
