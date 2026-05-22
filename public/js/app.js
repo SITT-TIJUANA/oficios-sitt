@@ -334,8 +334,8 @@ function activarSeccion(id) {
     cargarSeccion(id, sec);
   }
 
-  // En móvil cerrar el nav al seleccionar
-  if (window.innerWidth <= 768) closeNav();
+  // Cerrar nav siempre al seleccionar sección
+  closeNav();
 }
 
 // ══ CARGAR SECCIÓN ══
