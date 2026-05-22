@@ -1113,14 +1113,12 @@ async function cargarUsuariosInicio() {
 }
 
 // ══ INIT ══
-startSplashCanvas();
-
 (async () => {
   const me = await api('GET', '/me');
   if (me && me.nombre) {
     await cargarUsuariosInicio();
-    // Ya logueado - saltar splash y login directo al home
     document.getElementById('splash-screen').style.display = 'none';
     mostrarHome(me.nombre, me.rol);
   }
+  // Si no hay sesión, el splash se queda visible con el botón
 })();
