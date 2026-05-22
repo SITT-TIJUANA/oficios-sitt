@@ -34,8 +34,9 @@ html,body{height:100%;font-family:'Inter',-apple-system,sans-serif;font-size:14p
 
 .login-main-title{display:flex;flex-direction:column;gap:4px;margin-bottom:24px}
 .title-line{font-family:'Space Grotesk',sans-serif;font-size:68px;font-weight:900;line-height:1.0;color:#fff;letter-spacing:-3px;display:block;opacity:0}
-.title-line.gold{color:var(--gold);text-shadow:0 0 60px rgba(201,162,39,0.3)}
-.title-line.thin{font-size:38px;font-weight:400;color:rgba(255,255,255,0.5);letter-spacing:-1px}
+.title-line.gold{color:var(--gold);text-shadow:0 0 80px rgba(201,162,39,0.4)}
+.title-line.big{font-size:80px;letter-spacing:-4px}
+.title-line.sub{font-size:22px;font-weight:400;color:rgba(255,255,255,0.45);letter-spacing:1px;margin-top:12px}
 #t1{animation:slideInLeft .7s .4s cubic-bezier(0.22,1,0.36,1) forwards}
 #t2{animation:slideInLeft .7s .6s cubic-bezier(0.22,1,0.36,1) forwards}
 #t3{animation:slideInLeft .7s .8s cubic-bezier(0.22,1,0.36,1) forwards}
