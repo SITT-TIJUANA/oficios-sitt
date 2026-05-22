@@ -1,3 +1,71 @@
+// ══ SPLASH ══
+function _mostrarLoginInternal() {
+  const splash = document.getElementById('splash-screen');
+  const login = document.getElementById('login-screen');
+  const card = login.querySelector('.login-card');
+
+  // Animación salida splash
+  splash.style.transition = 'opacity 0.6s ease';
+  splash.style.opacity = '0';
+  setTimeout(() => {
+    splash.style.display = 'none';
+    login.style.display = 'flex';
+    startCanvas('bg-canvas');
+    // Animación entrada card
+    if (card) {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(40px) scale(0.95)';
+      card.style.transition = 'all 0.55s cubic-bezier(.22,1,.36,1)';
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0) scale(1)';
+      }, 50);
+    }
+  }, 600);
+}
+
+function regresarSplash() {
+  const splash = document.getElementById('splash-screen');
+  const login = document.getElementById('login-screen');
+  login.style.display = 'none';
+  splash.style.display = 'flex';
+  splash.style.opacity = '0';
+  splash.style.transition = 'opacity 0.4s ease';
+  setTimeout(() => { splash.style.opacity = '1'; }, 30);
+}
+
+function startSplashCanvas() {
+  const c = document.getElementById('splash-canvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let w = 0, h = 0;
+  const pts = [];
+  function resize() { w = c.width = c.offsetWidth; h = c.height = c.offsetHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for (let i = 0; i < 80; i++) {
+    pts.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-.5)*.4, vy: (Math.random()-.5)*.4, r: Math.random()*1.8+.3, col: Math.random()>.6?'gold':'guinda' });
+  }
+  function draw() {
+    ctx.clearRect(0,0,w,h);
+    for (let i=0;i<pts.length;i++) {
+      for (let j=i+1;j<pts.length;j++) {
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if (d<120) { ctx.beginPath(); ctx.strokeStyle=`rgba(201,162,39,${.06*(1-d/120)})`; ctx.lineWidth=.5; ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y); ctx.stroke(); }
+      }
+      ctx.beginPath(); ctx.arc(pts[i].x,pts[i].y,pts[i].r,0,Math.PI*2);
+      ctx.fillStyle = pts[i].col==='gold'?'rgba(201,162,39,0.4)':'rgba(107,26,42,0.5)';
+      ctx.fill();
+      pts[i].x+=pts[i].vx; pts[i].y+=pts[i].vy;
+      if(pts[i].x<0||pts[i].x>w) pts[i].vx*=-1;
+      if(pts[i].y<0||pts[i].y>h) pts[i].vy*=-1;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
 // ══ ESTADO GLOBAL ══
 let ROL = '';
 let USUARIOS = [];
@@ -10,7 +78,7 @@ async function api(method, path, body) {
     const opts = { method, headers: { 'Content-Type': 'application/json' }, credentials: 'include' };
     if (body) opts.body = JSON.stringify(body);
     const r = await fetch('/api' + path, opts);
-    if (r.status === 401) { mostrarLogin(); return null; }
+    if (r.status === 401) { document.getElementById('splash-screen').style.display='flex'; document.getElementById('splash-screen').style.opacity='1'; document.getElementById('home-screen').style.display='none'; document.getElementById('app').style.display='none'; document.getElementById('login-screen').style.display='none'; return null; }
     return await r.json();
   } catch (e) { return null; }
 }
@@ -1045,12 +1113,14 @@ async function cargarUsuariosInicio() {
 }
 
 // ══ INIT ══
-startCanvas('bg-canvas');
+startSplashCanvas();
 
 (async () => {
   const me = await api('GET', '/me');
   if (me && me.nombre) {
     await cargarUsuariosInicio();
+    // Ya logueado - saltar splash y login directo al home
+    document.getElementById('splash-screen').style.display = 'none';
     mostrarHome(me.nombre, me.rol);
   }
 })();
