@@ -30,12 +30,12 @@
     <div class="login-left">
       <div class="login-dept-badge" id="dept-badge">
         <span class="badge-dot"></span>
-        <span>DIRECCIÓN DE OPERACIONES</span>
+        <span>SITT · H. XXV Ayuntamiento de Tijuana</span>
       </div>
       <h1 class="login-main-title">
-        <span class="title-line" id="t1">CONTROL</span>
-        <span class="title-line gold" id="t2">DE OFICIOS</span>
-        <span class="title-line thin" id="t3">Y PENDIENTES</span>
+        <span class="title-line gold big" id="t1">DIRECCIÓN DE</span>
+        <span class="title-line gold big" id="t2">OPERACIONES</span>
+        <span class="title-line sub" id="t3">Control de Oficios y Pendientes</span>
       </h1>
       <p class="login-desc" id="login-desc-txt">Plataforma institucional para el registro, seguimiento y control de oficios, instrucciones y documentación operativa del SITT Tijuana.</p>
       <div class="login-features" id="login-feats">
@@ -236,4 +236,23 @@
       <div class="form-group"><label>Prioridad</label><select id="instr-prioridad"><option value="normal">Normal</option><option value="alta">Alta</option><option value="baja">Baja</option></select></div>
     </div>
     <div class="form-group"><label>Descripción *</label><textarea id="instr-texto" rows="4" placeholder="Descripción del pendiente..."></textarea></div>
-    <div class="f
+    <div class="form-row">
+      <div class="form-group"><label>Fecha</label><input type="date" id="instr-fecha"></div>
+      <div class="form-group"><label>Asignado a</label><select id="instr-asignado"><option value="">Sin asignar</option></select></div>
+    </div>
+    <div class="form-group"><label>Estado</label>
+      <select id="instr-estado"><option value="pendiente">Pendiente</option><option value="en_proceso">En proceso</option><option value="completada">Completada</option></select>
+    </div>
+    <div class="form-group"><label>Observaciones</label><textarea id="instr-obs" rows="2" placeholder="Notas..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal('instr-modal')">Cancelar</button>
+      <button class="btn-primary" onclick="guardarInstruccion()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" style="display:none" class="toast"></div>
+<script src="js/flujo-visual.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
